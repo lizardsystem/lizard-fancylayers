@@ -1,21 +1,17 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.rst.
 from __future__ import unicode_literals
 
-from django.utils.translation import ugettext as _
-# from django.core.urlresolvers import reverse
-# from lizard_map.views import MapView
-# from lizard_ui.views import UiView
-
-# from lizard_fancylayers import models
+from lizard_map.views import AppView
+from lizard_datasource import datasource
 
 
-# class TodoView(UiView):
-#     """Simple view without a map."""
-#     template_name = 'lizard_fancylayers/todo.html'
-#     page_title = _('TODO view')
+class FancyLayersView(AppView):
+    # Placeholder for our own utils later
+    pass
 
 
-# class Todo2View(MapView):
-#     """Simple view with a map."""
-#     template_name = 'lizard_fancylayers/todo2.html'
-#     page_title = _('TODO 2 view')
+class HomepageView(FancyLayersView):
+    template_name = 'lizard_fancylayers/homepage.html'
+
+    def datasource(self):
+        return datasource.CombinedDataSource()
