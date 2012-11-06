@@ -15,7 +15,7 @@ urlpatterns = patterns(
     url(r'^map/', include('lizard_map.urls')),
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^$',
+    url(r'^(([a-z0-9_]+-[a-z0-9_]+/)*)$',
         views.HomepageView.as_view(),
         name="lizard_fancylayers.homepage",
         ),
