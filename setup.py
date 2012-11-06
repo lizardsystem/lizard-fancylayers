@@ -12,7 +12,8 @@ install_requires = [
     'Django',
     'django-extensions',
     'django-nose',
-    'lizard-ui >= 4.0b5',
+    'lizard-ui >= 4.0',
+    'lizard-map >= 4.0',
     ],
 
 tests_require = [
@@ -27,8 +28,8 @@ setup(name='lizard-fancylayers',
                    'Framework :: Django',
                    ],
       keywords=[],
-      author='TODO',
-      author_email='TODO@nelen-schuurmans.nl',
+      author='Remco Gerlich',
+      author_email='remco.gerlich@nelen-schuurmans.nl',
       url='',
       license='GPL',
       packages=['lizard_fancylayers'],
@@ -36,8 +37,12 @@ setup(name='lizard-fancylayers',
       zip_safe=False,
       install_requires=install_requires,
       tests_require=tests_require,
-      extras_require = {'test': tests_require},
+      extras_require={'test': tests_require},
       entry_points={
           'console_scripts': [
-          ]},
+          ],
+          'lizard_map.adapter_class': [
+          'adapter_fancylayers = lizard_fancylayers.layers:FancyLayersAdapter'
+            ],
+          }
       )
