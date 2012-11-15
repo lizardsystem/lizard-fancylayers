@@ -4,7 +4,9 @@ from __future__ import unicode_literals
 import logging
 
 from django.core.urlresolvers import reverse
+from django.utils import simplejson
 
+from lizard_map.lizard_widgets import WorkspaceAcceptable
 from lizard_map.views import AppView
 from lizard_datasource import datasource
 
@@ -57,7 +59,11 @@ class HomepageView(FancyLayersView):
                     # Could we draw it on the map then?
                     if self.datasource.is_drawable(new_choices_made):
                         # Make it a workspace-acceptable
-                        value['workspace_acceptable'] = True
+                        value['workspace_acceptable'] = WorkspaceAcceptable(
+                            name=value['description'],
+                            adapter_name='adapter_fancylayers',
+                            adapter_layer_json=simplejson.dumps({
+                                    'choices_made': new_choices_made.json()}))
                     else:
                         # Give it a URL that makes it choosable
                         value['url'] = self.make_url(new_choices_made)
@@ -76,7 +82,8 @@ class HomepageView(FancyLayersView):
                     'identifier': criterion.identifier,
                     'description': criterion.description,
                     'url': self.make_url(
-                        self.choices_made.forget(criterion.identifier))
+                        self.choices_made.forget(criterion.identifier)),
+                    'value': self.choices_made[criterion.identifier]
                     })
 
         return forgettable_criteria

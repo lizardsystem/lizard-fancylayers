@@ -8,7 +8,7 @@
 <div id="iconbox" class="sidebarbox sidebarbox-stretched iconlist">
 <ul>
 {% for criterion in view.forgettable_criteria %}
-<li>{{ criterion.description }} <a href="{{ criterion.url }}">X</a></li>
+<li>{{ criterion.description }}: {{ criterion.value }} <a href="{{ criterion.url }}">X</a></li>
 {% endfor %}
 </ul>
 {% for criterion in view.chooseable_criteria %}
@@ -19,7 +19,7 @@
 {% if value.url %}
       <a href="{{ value.url }}">{{ value.description }}</a>
 {% elif value.workspace_acceptable %}
-      {{ value.description }} (add to workspace)
+      {{ value.workspace_acceptable.to_html }}
 {% else %}
       {{ value.description }}
 {% endif %}
