@@ -66,8 +66,8 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         colors = {"default": html_to_mapnik('0000ff')}
         logger.debug("1")
         for location in locations:
-            if 'color' in location:
-                colors[location['color']] = html_to_mapnik(location['color'])
+            if location.color is not None:
+                colors[location.color] = html_to_mapnik(location.color)
 
         style = mapnik.Style()
         logger.debug("2")
@@ -90,12 +90,12 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         logger.debug("4 - {0}".format(locations))
 
         for location in locations:
-            color = location.get('color', 'default')
+            color = location.color or 'default'
             logger.debug('{0}: {1}'.format(location, color))
             add_datasource_point(
-                layer.datasource, location['longitude'],
-                location['latitude'],
-                'Color', str(location.get('color', 'default')))
+                layer.datasource, location.longitude,
+                location.latitude,
+                'Color', str(color))
         logger.debug("5")
 
         layers.append(layer)
@@ -113,20 +113,17 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         result = []
         for location in locations:
             x, y = coordinates.wgs84_to_google(
-                location['longitude'],
-                location['latitude'])
+                location.longitude,
+                location.latitude)
             dist = distance(google_x, google_y, x, y)
-
-            description = location.get(
-                'description', location['identifier'])
 
             if dist < radius:
                 result.append(
                     {'distance': dist,
-                     'name': description,
-                     'shortname': location['identifier'],
+                     'name': location.description(),
+                     'shortname': location.identifier,
                      'workspace_item': self.workspace_item,
-                     'identifier': {'identifier': location['identifier']},
+                     'identifier': {'identifier': location.identifier},
                      'google_coords': (x, y),
                      'object': None})
         result.sort(key=lambda item: item['distance'])
@@ -140,13 +137,13 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
     def location(self, identifier, layout=None):
         locations = self.datasource.locations()
         for location in locations:
-            if location['identifier'] == identifier:
+            if location.identifier == identifier:
                 break
         else:
             return None
 
         google_x, google_y = coordinates.wgs84_to_google(
-            location['longitude'], location['latitude'])
+            location.longitude, location.latitude)
 
         identifier_to_return = {
             'identifier': identifier
@@ -154,7 +151,7 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         if layout is not None:
             identifier_to_return['layout'] = layout
 
-        description = location.get('description', location['identifier'])
+        description = location.description()
 
         return {
             'google_coords': (google_x, google_y),
@@ -248,27 +245,29 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
 
         is_empty = True
         for identifier in identifiers:
-#            filter_id = self.filterkey
             location_id = identifier['identifier']
-            logger.debug("Find location id {0} in locations".format(location_id))
+            logger.debug(
+                "Find location id {0} in locations".format(location_id))
             location_name = [
-                location['identifier'] for location in locations
-                if location['identifier'] == location_id][0]
-            logger.debug("Voor timeseries, datasource is {0}".format(self.datasource))
-#            parameter_id = self.parameterkey
+                location.description for location in locations
+                if location.identifier == location_id][0]
+            logger.debug(
+                "Voor timeseries, datasource is {0}".format(self.datasource))
+
             timeseries = self.datasource.timeseries(
                 location_id, start_date, end_date)
 
             if timeseries is not None:
                 is_empty = False
                 # Plot data if available.
-                dates = timeseries.keys()
-                values = list(timeseries)
+                dates = timeseries.dates()
+                values = timeseries.values()
                 if values:
-                    graph.axes.plot(dates, values,
-                                    lw=1,
-                                    color=line_styles[str(identifier)]['color'],
-                                    label=location_name)
+                    graph.axes.plot(
+                        dates, values,
+                        lw=1,
+                        color=line_styles[str(identifier)]['color'],
+                        label=location_name)
             # Apply custom layout parameters.
             if 'layout' in identifier:
                 layout = identifier['layout']
