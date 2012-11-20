@@ -44,7 +44,7 @@ class HomepageView(FancyLayersView):
     @property
     def datasource(self):
         if not hasattr(self, '_datasource'):
-            self._datasource = datasource.CombinedDataSource(self.choices_made)
+            self._datasource = datasource.datasource(self.choices_made)
         return self._datasource
 
     def chooseable_criteria(self):

@@ -49,7 +49,7 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
 
         self.choices_made = datasource.ChoicesMade(
             json=self.layer_arguments['choices_made'])
-        self.datasource = datasource.CombinedDataSource(
+        self.datasource = datasource.datasource(
             choices_made=self.choices_made)
 
     def layer(self, layer_ids=None, webcolor=None, request=None):
