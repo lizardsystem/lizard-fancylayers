@@ -50,23 +50,28 @@ class HomepageView(FancyLayersView):
     def chooseable_criteria(self):
         try:
             criteria = self.datasource.chooseable_criteria()
-            for criterion in criteria:
-                for value in criterion['values']:
+            for crit in criteria:
+                criterion = crit['criterion']
+                options = crit['options']
+                logger.debug(
+                    "Chooseable_criteria; criterion={0} options={1}"
+                    .format(criterion, options))
+                for option in options.iter_options():
                     # Suppose we chose this value
                     new_choices_made = self.choices_made.add(
-                        criterion['criterion'].identifier,
-                        value['identifier'])
+                        criterion.identifier,
+                        option.identifier)
                     # Could we draw it on the map then?
                     if self.datasource.is_drawable(new_choices_made):
                         # Make it a workspace-acceptable
-                        value['workspace_acceptable'] = WorkspaceAcceptable(
-                            name=value['description'],
+                        option.workspace_acceptable = WorkspaceAcceptable(
+                            name=option.description,
                             adapter_name='adapter_fancylayers',
                             adapter_layer_json=simplejson.dumps({
                                     'choices_made': new_choices_made.json()}))
                     else:
                         # Give it a URL that makes it choosable
-                        value['url'] = self.make_url(new_choices_made)
+                        option.url = self.make_url(new_choices_made)
 
             return criteria
         except Exception, e:
