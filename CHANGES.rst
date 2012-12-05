@@ -5,7 +5,7 @@ Changelog of lizard-fancylayers
 0.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Add support for percentiles.
 
 
 0.1 (2012-11-15)

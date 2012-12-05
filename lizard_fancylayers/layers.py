@@ -249,7 +249,7 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
             logger.debug(
                 "Find location id {0} in locations".format(location_id))
             location_name = [
-                location.description for location in locations
+                location.description() for location in locations
                 if location.identifier == location_id][0]
             logger.debug(
                 "Voor timeseries, datasource is {0}".format(self.datasource))
@@ -268,6 +268,13 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
                         lw=1,
                         color=line_styles[str(identifier)]['color'],
                         label=location_name)
+
+            if (self.datasource.has_percentiles() and
+                hasattr(graph, 'add_percentiles')):
+                percentiles = self.datasource.percentiles(
+                    location_id, start_date, end_date)
+                graph.add_percentiles(location_name, percentiles, (0.4, 0.2))
+
             # Apply custom layout parameters.
             if 'layout' in identifier:
                 layout = identifier['layout']
