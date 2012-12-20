@@ -2,7 +2,7 @@ Changelog of lizard-fancylayers
 ===================================================
 
 
-0.2 (unreleased)
+0.2 (2012-12-20)
 ----------------
 
 - Add support for percentiles, colors.
