@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'lizard_fancylayers',
     'lizard_datasource',
     'lizard_ui',
+    'lizard_map',
     'staticfiles',
     'compressor',
     'south',

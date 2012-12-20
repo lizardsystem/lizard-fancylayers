@@ -49,7 +49,10 @@ class HomepageView(FancyLayersView):
 
     def chooseable_criteria(self):
         try:
-            criteria = self.datasource.chooseable_criteria()
+            datasource = self.datasource
+            if datasource is None:
+                return []
+            criteria = datasource.chooseable_criteria()
             for crit in criteria:
                 criterion = crit['criterion']
                 options = crit['options']
@@ -62,7 +65,7 @@ class HomepageView(FancyLayersView):
                         criterion.identifier,
                         option.identifier)
                     # Could we draw it on the map then?
-                    if self.datasource.is_drawable(new_choices_made):
+                    if datasource.is_drawable(new_choices_made):
                         # Make it a workspace-acceptable
                         option.workspace_acceptable = WorkspaceAcceptable(
                             name=option.description,
@@ -80,6 +83,9 @@ class HomepageView(FancyLayersView):
 
     def forgettable_criteria(self):
         forgettable_criteria = []
+        datasource = self.datasource
+        if datasource is None:
+            return []
         for criterion in self.datasource.criteria():
             if criterion.identifier not in self.choices_made:
                 continue
