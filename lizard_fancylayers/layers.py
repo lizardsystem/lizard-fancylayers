@@ -7,10 +7,12 @@ import pytz
 
 from django.conf import settings
 from django.http import Http404
+from django.template.loader import render_to_string
 
 from lizard_map import coordinates
 from lizard_map import workspace
 from lizard_map.adapter import Graph, FlotGraph
+from lizard_map.adapter import adapter_serialize
 from lizard_map.mapnik_helper import add_datasource_point
 from lizard_map.models import ICON_ORIGINALS
 from lizard_map.symbol_manager import SymbolManager
@@ -130,9 +132,53 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         return result[:3]  # Max 3.
 
     def html(self, identifiers=None, layout_options=None):
-        return self.html_default(
-            identifiers=identifiers,
-            layout_options=layout_options)
+        """Adapted version of lizard-map's html_default. If there are
+        several graphs to be shown, we show them as several graphs in
+        one popup tab."""
+
+        is_collage = layout_options and layout_options.get('is_collage', False)
+
+        # Build "adapter-image" url for current adapter and identifiers,
+        # one for each identifier.
+        urls = [
+            {'image_url': self.workspace_mixin_item.url(
+                    "lizard_map_adapter_image", [identifier]),
+             'flot_url': self.workspace_mixin_item.url(
+                    "lizard_map_adapter_flot_graph_data", [identifier]),
+             'title': self.location(**identifier)['name']
+             }
+            for identifier in identifiers]
+
+        # Makes it possible to create collage items from current
+        # selected objects.
+        collage_item_props = []
+        # No export and selection for collages.
+        if not is_collage:
+            for identifier in identifiers:
+                location = self.location(**identifier)
+                collage_item_props.append(
+                    {'name': location['name'],
+                     'adapter_class': self.workspace_mixin_item.adapter_class,
+                     'adapter_layer_json':
+                         self.workspace_mixin_item.adapter_layer_json,
+                     'identifier': adapter_serialize(identifier),
+                     'url': self.workspace_mixin_item.url(
+                            "lizard_map_adapter_values", [identifier, ],
+                            extra_kwargs={'output_type': 'csv'})})
+
+        render_kwargs = {
+            'urls': urls,
+            'symbol_url': self.symbol_url(),
+            'collage_item_props': collage_item_props,
+            'adapter': self,
+            }
+
+        if layout_options is not None:
+            render_kwargs.update(layout_options)
+
+        return render_to_string(
+            'lizard_fancylayers/popup.html',
+            render_kwargs)
 
     def location(self, identifier, layout=None):
         locations = self.datasource.locations()
