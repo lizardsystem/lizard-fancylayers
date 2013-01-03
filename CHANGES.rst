@@ -2,7 +2,7 @@ Changelog of lizard-fancylayers
 ===================================================
 
 
-0.3 (unreleased)
+0.3 (2013-01-03)
 ----------------
 
 - If a popup is shown for several identifiers at once, they are now
