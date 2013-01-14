@@ -208,6 +208,25 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
             'object': location
             }
 
+    def values(self, identifier, start_date, end_date):
+        """Return values in list of dictionaries (datetime, value, unit)
+        """
+        logger.debug("Identifier: {}".format(identifier))
+        logger.debug("Start_date: {}".format(start_date))
+        logger.debug("End_date: {}".format(end_date))
+        timeseries = self.datasource.timeseries(
+            identifier['identifier'], start_date, end_date)
+        logger.debug("Timeseries: {}".format(timeseries))
+        values = [{
+                'datetime': data[0],
+                'value': data[1],
+                'unit': ""
+                }
+                for data in timeseries.data()
+                ]
+        logger.debug("Values: {}".format(values))
+        return values
+
     def image(
         self, identifiers, start_date, end_date, width=380.0, height=250.0,
         layout_extra=None, raise_404_if_empty=False):

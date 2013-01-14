@@ -5,7 +5,8 @@ Changelog of lizard-fancylayers
 0.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Added a values() method to the adapter, so that CSV files with
+  values can be downloaded.
 
 
 0.3 (2013-01-03)
