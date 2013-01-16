@@ -6,6 +6,9 @@
 {% comment %}title is in the for loop below{% endcomment %}
 {% endblock %}
 
+{% if unit %}
+<strong>{{ unit }}</strong>
+{% endif %}
 {% for url in urls %}
 <div>
   <img src="{{ symbol_url }}" />&nbsp;

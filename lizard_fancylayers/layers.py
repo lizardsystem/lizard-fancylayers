@@ -167,6 +167,7 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
                             extra_kwargs={'output_type': 'csv'})})
 
         render_kwargs = {
+            'unit': self.datasource.unit(self.choices_made) or u'',
             'urls': urls,
             'symbol_url': self.symbol_url(),
             'collage_item_props': collage_item_props,

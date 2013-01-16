@@ -47,17 +47,17 @@ class HomepageView(FancyLayersView):
             self._datasource = datasource.datasource(self.choices_made)
         return self._datasource
 
-    def chooseable_criteria(self):
+    def visible_criteria(self):
         try:
             datasource = self.datasource
             if datasource is None:
                 return []
-            criteria = datasource.chooseable_criteria()
+            criteria = datasource.visible_criteria()
             for crit in criteria:
                 criterion = crit['criterion']
                 options = crit['options']
                 logger.debug(
-                    "Chooseable_criteria; criterion={0} options={1}"
+                    "Visible_criteria; criterion={0} options={1}"
                     .format(criterion, options))
                 for option in options.iter_options():
                     # Suppose we chose this value
@@ -78,7 +78,7 @@ class HomepageView(FancyLayersView):
 
             return criteria
         except Exception, e:
-            logger.debug("Caught exception in chooseable_criteria: {0}".
+            logger.debug("Caught exception in visible_criteria: {0}".
                          format(e))
 
     def forgettable_criteria(self):

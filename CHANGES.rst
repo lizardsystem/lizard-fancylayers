@@ -8,6 +8,7 @@ Changelog of lizard-fancylayers
 - Added a values() method to the adapter, so that CSV files with
   values can be downloaded.
 
+- Show a unit in the popup.
 
 0.3 (2013-01-03)
 ----------------
