@@ -2,7 +2,7 @@ Changelog of lizard-fancylayers
 ===================================================
 
 
-0.4 (unreleased)
+0.4 (2013-01-16)
 ----------------
 
 - Added a values() method to the adapter, so that CSV files with
