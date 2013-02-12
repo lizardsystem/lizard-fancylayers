@@ -339,8 +339,15 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
                         hasattr(graph, 'add_percentiles')):
                         percentiles = self.datasource.percentiles(
                             location_id, start_date, end_date)
-                        graph.add_percentiles(
-                            location_name, percentiles, (0.4, 0.2))
+                        opacities = ()
+                        if len(percentiles) == 2:
+                            opacities = (0.4,)
+                        elif len(percentiles) == 4:
+                            opacities = (0.4, 0.2)
+
+                        if opacities:
+                            graph.add_percentiles(
+                                location_name, percentiles, opacities)
 
             # Apply custom layout parameters.
             if 'layout' in identifier:
