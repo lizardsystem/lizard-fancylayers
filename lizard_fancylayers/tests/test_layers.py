@@ -38,3 +38,22 @@ class TestAdapter(TestCase):
         html = adapter.html(identifiers=[{'identifier': 'dummy'}])
 
         self.assertTrue(html)
+
+    def test_returns_legend(self, patched_datasource):
+        workspace_item = mock.MagicMock()
+
+        adapter = layers.FancyLayersAdapter(
+            workspace_item,
+            layer_arguments={'choices_made': "{}"})
+
+        legend = adapter.legend()
+
+        # Must be an iterable
+        l = list(legend)
+
+        # Must be something in it
+        self.assertTrue(len(l) > 0)
+
+        # Must have right keys
+        self.assertTrue('img_url' in l[0])
+        self.assertTrue('description' in l[0])

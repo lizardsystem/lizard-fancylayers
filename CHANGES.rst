@@ -5,7 +5,8 @@ Changelog of lizard-fancylayers
 0.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Implement a legend() function using lizard-datasource's
+  location_annotations.
 
 
 0.4 (2013-01-16)

@@ -22,8 +22,13 @@ from lizard_datasource import datasource
 
 logger = logging.getLogger(__name__)
 
+DEFAULT_COLOR = '0000ff'
+
 
 def html_to_mapnik(color):
+    if color[0] == '#':
+        color = color[1:]
+
     r, g, b = color[0:2], color[2:4], color[4:6]
     rr, gg, bb = int(r, 16), int(g, 16), int(b, 16)
 
@@ -34,13 +39,22 @@ def symbol_filename(color):
     symbol_manager = SymbolManager(
         ICON_ORIGINALS,
         os.path.join(settings.MEDIA_ROOT, 'generated_icons'))
-
-    output_filename = symbol_manager.get_symbol_transformed(
+    filename = symbol_manager.get_symbol_transformed(
         'meetpuntPeil.png', mask=('meetpuntPeil_mask.png',),
         color=color)
-    output_filename_abs = os.path.join(
-        settings.MEDIA_ROOT, 'generated_icons', output_filename)
-    return output_filename_abs
+    return filename
+
+
+def symbol_pathname(color):
+    filename = symbol_filename(color)
+    pathname = os.path.join(
+        settings.MEDIA_ROOT, 'generated_icons', filename)
+    return pathname
+
+
+def symbol_url(color):
+    return "{media_url}generated_icons/{filename}".format(
+        media_url=settings.MEDIA_URL, filename=symbol_filename(color))
 
 
 class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
@@ -65,7 +79,7 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         styles = {}
 
         locations = list(self.datasource.locations())
-        colors = {"default": html_to_mapnik('0000ff')}
+        colors = {"default": html_to_mapnik(DEFAULT_COLOR)}
         logger.debug("1")
         for location in locations:
             if location.color is not None:
@@ -77,7 +91,7 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         for colorname, color in colors.iteritems():
             rule = mapnik.Rule()
             symbol = mapnik.PointSymbolizer(
-                symbol_filename(color), 'png', 16, 16)
+                symbol_pathname(color), 'png', 16, 16)
             symbol.allow_overlap = True
             rule.symbols.append(symbol)
             rule.filter = mapnik.Filter("[Color] = '{0}'".format(colorname))
@@ -379,9 +393,9 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         y_min_manual = y_min is not None
         y_max_manual = y_max is not None
         if y_min is None:
-            y_min, _ = graph.axes.get_ylim()
+            y_min, dummy = graph.axes.get_ylim()
         if y_max is None:
-            _, y_max = graph.axes.get_ylim()
+            dummy, y_max = graph.axes.get_ylim()
 
         if title:
             graph.suptitle(title)
@@ -400,3 +414,25 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
 
         graph.add_today()
         return graph.render()
+
+    def legend(self, updates=None):
+        """Returns a list of {'img_url':..., 'description':...}
+        dictionaries that are used to make a legend for this
+        datasource."""
+
+        # If there is a legend, it is in the datasource's location annotations
+        annotations = self.datasource.location_annotations() or {}
+
+        if 'color' in annotations and annotations['color']:
+            # Colorlegend is a list of (color, description) tuples
+            colorlegend = annotations['color']
+            return [{
+                    'img_url': symbol_url(html_to_mapnik(color)),
+                    'description': description}
+                    for color, description in colorlegend]
+
+        # Otherwise return the default icon, without description
+        return [{
+                'img_url': symbol_url(html_to_mapnik(DEFAULT_COLOR)),
+                'description': ''
+                }]
