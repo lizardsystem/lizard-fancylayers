@@ -2,7 +2,7 @@ Changelog of lizard-fancylayers
 ===================================================
 
 
-0.5 (unreleased)
+0.5 (2013-02-12)
 ----------------
 
 - Implement a legend() function using lizard-datasource's
