@@ -12,6 +12,9 @@ class MockDataSource(datasource.DataSource):
     def locations(self, bare=True):
         return [location.Location('dummy', 0, 0)]
 
+    def unit(self, choices_made=None):
+        return None
+
 
 @mock.patch('lizard_datasource.datasource.get_datasources',
             return_value=[MockDataSource()])
