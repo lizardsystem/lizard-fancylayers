@@ -15,6 +15,11 @@ class MockDataSource(datasource.DataSource):
     def unit(self, choices_made=None):
         return None
 
+    def location_annotations(self):
+        # TODO: this method was missing in the tests since 12 feb 2013.
+        # None is probably not what it should be returning.
+        return None
+
 
 @mock.patch('lizard_datasource.datasource.get_datasources',
             return_value=[MockDataSource()])
@@ -57,3 +62,15 @@ class TestAdapter(TestCase):
         # Must have right keys
         self.assertTrue('img_url' in l[0])
         self.assertTrue('description' in l[0])
+
+    def test_empty_legend(self, patched_datasource):
+        # Don't return a legend if there are no annotations to grab colors
+        # from.
+        workspace_item = mock.MagicMock()
+
+        adapter = layers.FancyLayersAdapter(
+            workspace_item,
+            layer_arguments={'choices_made': "{}"})
+
+        legend = adapter.legend()
+        self.assertEquals(legend, [])
