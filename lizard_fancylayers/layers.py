@@ -431,8 +431,6 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
                     'description': description}
                     for color, description in colorlegend]
 
-        # Otherwise return the default icon, without description
-        return [{
-                'img_url': symbol_url(html_to_mapnik(DEFAULT_COLOR)),
-                'description': ''
-                }]
+        # If we cannot find any proper colored legend, return nothing.
+        # This effectively hides the legend.
+        return []
