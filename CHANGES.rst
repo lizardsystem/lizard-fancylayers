@@ -5,7 +5,9 @@ Changelog of lizard-fancylayers
 0.6 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Hiding the legend if there's no proper legend to be found.
+
+- Fixed icon before popup graph title.
 
 
 0.5 (2013-02-12)
