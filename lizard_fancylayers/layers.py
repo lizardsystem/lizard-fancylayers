@@ -183,7 +183,7 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         render_kwargs = {
             'unit': self.datasource.unit(self.choices_made) or u'',
             'urls': urls,
-            'symbol_url': self.symbol_url(),
+            'symbol_url': symbol_url(html_to_mapnik(DEFAULT_COLOR)),
             'collage_item_props': collage_item_props,
             'adapter': self,
             }
