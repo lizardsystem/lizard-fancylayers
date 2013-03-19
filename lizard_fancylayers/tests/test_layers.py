@@ -1,7 +1,6 @@
 import mock
 
 from django.test import TestCase
-
 from lizard_datasource import datasource
 from lizard_datasource import location
 
@@ -13,11 +12,6 @@ class MockDataSource(datasource.DataSource):
         return [location.Location('dummy', 0, 0)]
 
     def unit(self, choices_made=None):
-        return None
-
-    def location_annotations(self):
-        # TODO: this method was missing in the tests since 12 feb 2013.
-        # None is probably not what it should be returning.
         return None
 
 
