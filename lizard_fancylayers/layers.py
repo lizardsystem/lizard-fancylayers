@@ -183,7 +183,7 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         render_kwargs = {
             'unit': self.datasource.unit(self.choices_made) or u'',
             'urls': urls,
-            'symbol_url': symbol_url(html_to_mapnik(DEFAULT_COLOR)),
+            'symbol_url': self.symbol_url(),
             'collage_item_props': collage_item_props,
             'adapter': self,
             }
@@ -194,6 +194,10 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         return render_to_string(
             'lizard_fancylayers/popup.html',
             render_kwargs)
+
+    def symbol_url(self):
+        # Note: it calls the symbol_url *function* in this module.
+        return symbol_url(html_to_mapnik(DEFAULT_COLOR))
 
     def location(self, identifier, layout=None):
         locations = self.datasource.locations()
