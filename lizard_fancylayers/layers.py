@@ -187,6 +187,10 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
             'lizard_fancylayers/popup.html',
             render_kwargs)
 
+    def symbol_url(self):
+        # Note: it calls the symbol_url *function* in this module.
+        return symbol_url(html_to_mapnik(DEFAULT_COLOR))
+
     def location(self, identifier, layout=None):
         locations = self.datasource.locations()
         for location in locations:
@@ -421,8 +425,6 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
                     'description': description}
                     for color, description in colorlegend]
 
-        # Otherwise return the default icon, without description
-        return [{
-                'img_url': symbol_url(html_to_mapnik(DEFAULT_COLOR)),
-                'description': ''
-                }]
+        # If we cannot find any proper colored legend, return nothing.
+        # This effectively hides the legend.
+        return []

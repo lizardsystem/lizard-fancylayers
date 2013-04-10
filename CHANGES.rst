@@ -5,14 +5,16 @@ Changelog of lizard-fancylayers
 0.7 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
-
-0.6 (2013-04-10)
-----------------
-
 - Make it possible to show several timeseries from one location in one
   graph. Doesn't look nice yet.
+
+
+0.6 (2013-03-19)
+----------------
+
+- Hiding the legend if there's no proper legend to be found.
+
+- Fixed icon before popup graph title.
 
 
 0.5 (2013-02-12)

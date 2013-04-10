@@ -1,7 +1,6 @@
 import mock
 
 from django.test import TestCase
-
 from lizard_datasource import datasource
 from lizard_datasource import location
 
@@ -57,3 +56,15 @@ class TestAdapter(TestCase):
         # Must have right keys
         self.assertTrue('img_url' in l[0])
         self.assertTrue('description' in l[0])
+
+    def test_empty_legend(self, patched_datasource):
+        # Don't return a legend if there are no annotations to grab colors
+        # from.
+        workspace_item = mock.MagicMock()
+
+        adapter = layers.FancyLayersAdapter(
+            workspace_item,
+            layer_arguments={'choices_made': "{}"})
+
+        legend = adapter.legend()
+        self.assertEquals(legend, [])
