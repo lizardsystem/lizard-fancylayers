@@ -32,7 +32,6 @@ class HomepageView(FancyLayersView):
 
     def make_choices_made(self, choices):
         choicelist = choices.split('/')[:-1]
-        logger.debug("CHOICES: {0}".format(choicelist))
 
         choicedict = {}
         for choice in choicelist:
@@ -56,9 +55,7 @@ class HomepageView(FancyLayersView):
             for crit in criteria:
                 criterion = crit['criterion']
                 options = crit['options']
-                logger.debug(
-                    "Visible_criteria; criterion={0} options={1}"
-                    .format(criterion, options))
+
                 for option in options.iter_options():
                     # Suppose we chose this value
                     new_choices_made = self.choices_made.add(
@@ -78,8 +75,8 @@ class HomepageView(FancyLayersView):
 
             return criteria
         except Exception, e:
-            logger.debug("Caught exception in visible_criteria: {0}".
-                         format(e))
+            logger.warn("Caught exception in visible_criteria: {0}".
+                        format(e))
 
     def forgettable_criteria(self):
         forgettable_criteria = []

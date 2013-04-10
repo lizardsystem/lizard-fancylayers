@@ -69,10 +69,8 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
             choices_made=self.choices_made)
 
     def layer(self, layer_ids=None, webcolor=None, request=None):
-        logger.debug("In lizard_fancylayers.layer")
         # We only do point layers right now
         if not self.datasource.has_property(properties.LAYER_POINTS):
-            logger.debug("Datasource is not a point layer.")
             return [], {}
 
         layers = []
@@ -80,13 +78,12 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
 
         locations = list(self.datasource.locations())
         colors = {"default": html_to_mapnik(DEFAULT_COLOR)}
-        logger.debug("1")
+
         for location in locations:
             if location.color is not None:
                 colors[location.color] = html_to_mapnik(location.color)
 
         style = mapnik.Style()
-        logger.debug("2")
 
         for colorname, color in colors.iteritems():
             rule = mapnik.Rule()
@@ -98,21 +95,17 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
             style.rules.append(rule)
 
         styles['trivialStyle'] = style
-        logger.debug("3")
 
         layer = mapnik.Layer("Fancy Layers layer", coordinates.WGS84)
         layer.datasource = mapnik.PointDatasource()
         layer.styles.append('trivialStyle')
-        logger.debug("4 - {0}".format(locations))
 
         for location in locations:
             color = location.color or 'default'
-            logger.debug('{0}: {1}'.format(location, color))
             add_datasource_point(
                 layer.datasource, location.longitude,
                 location.latitude,
                 'Color', str(color))
-        logger.debug("5")
 
         layers.append(layer)
         return layers, styles
@@ -149,7 +142,6 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         """Adapted version of lizard-map's html_default. If there are
         several graphs to be shown, we show them as several graphs in
         one popup tab."""
-
         is_collage = layout_options and layout_options.get('is_collage', False)
 
         # Build "adapter-image" url for current adapter and identifiers,
@@ -226,12 +218,8 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
     def values(self, identifier, start_date, end_date):
         """Return values in list of dictionaries (datetime, value, unit)
         """
-        logger.debug("Identifier: {}".format(identifier))
-        logger.debug("Start_date: {}".format(start_date))
-        logger.debug("End_date: {}".format(end_date))
         timeseries = self.datasource.timeseries(
             identifier['identifier'], start_date, end_date)
-        logger.debug("Timeseries: {}".format(timeseries))
         values = [{
                 'datetime': data[0],
                 'value': data[1],
@@ -239,7 +227,7 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
                 }
                 for data in timeseries.data()
                 ]
-        logger.debug("Values: {}".format(values))
+
         return values
 
     def image(
@@ -272,9 +260,6 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         New: this is now a more generalized version of image(), to
         support FlotGraph.
         """
-
-        logger.debug("_RENDER_GRAPH entered")
-        logger.debug("identifiers: {0}".format(identifiers))
 
         def apply_lines(identifier, values, location_name):
             """Adds lines that are defined in layout. Uses function
@@ -326,42 +311,47 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         is_empty = True
         for identifier in identifiers:
             location_id = identifier['identifier']
-            logger.debug(
-                "Find location id {0} in locations".format(location_id))
+
             location_name = [
                 location.description() for location in locations
                 if location.identifier == location_id][0]
-            logger.debug(
-                "Voor timeseries, datasource is {0}".format(self.datasource))
 
             timeseries = self.datasource.timeseries(
                 location_id, start_date, end_date)
 
             if timeseries is not None:
                 is_empty = False
+                dataframe = timeseries.dataframe
                 # Plot data if available.
-                dates = timeseries.dates()
-                values = timeseries.values()
-                if values:
-                    graph.axes.plot(
-                        dates, values,
-                        lw=1,
-                        color=line_styles[str(identifier)]['color'],
-                        label=location_name)
+                for series_num, series_name in enumerate(dataframe.columns):
+                    series = dataframe[series_name].dropna()
+                    dates = series.keys()
+                    values = list(series)
 
-                    if (self.datasource.has_percentiles() and
-                        hasattr(graph, 'add_percentiles')):
-                        percentiles = self.datasource.percentiles(
-                            location_id, start_date, end_date)
-                        opacities = ()
-                        if len(percentiles) == 2:
-                            opacities = (0.4,)
-                        elif len(percentiles) == 4:
-                            opacities = (0.4, 0.2)
+                    if series_num == 0:
+                        color = line_styles[str(identifier)]['color']
+                    else:
+                        color = 'rgb(0, 255, 0)'
+                    if values:
+                        graph.axes.plot(
+                            dates, values,
+                            lw=1,
+                            color=color,
+                            label=location_name)
 
-                        if opacities:
-                            graph.add_percentiles(
-                                location_name, percentiles, opacities)
+                if (self.datasource.has_percentiles() and
+                    hasattr(graph, 'add_percentiles')):
+                    percentiles = self.datasource.percentiles(
+                        location_id, start_date, end_date)
+                    opacities = ()
+                    if len(percentiles) == 2:
+                        opacities = (0.4,)
+                    elif len(percentiles) == 4:
+                        opacities = (0.4, 0.2)
+
+                    if opacities:
+                        graph.add_percentiles(
+                            location_name, percentiles, opacities)
 
             # Apply custom layout parameters.
             if 'layout' in identifier:

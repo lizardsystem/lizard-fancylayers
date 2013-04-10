@@ -5,7 +5,8 @@ Changelog of lizard-fancylayers
 0.6 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Make it possible to show several timeseries from one location in one
+  graph. Doesn't look nice yet.
 
 
 0.5 (2013-02-12)
