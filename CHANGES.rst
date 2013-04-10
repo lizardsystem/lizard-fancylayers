@@ -2,7 +2,7 @@ Changelog of lizard-fancylayers
 ===================================================
 
 
-0.7 (unreleased)
+0.7 (2013-04-10)
 ----------------
 
 - Make it possible to show several timeseries from one location in one
