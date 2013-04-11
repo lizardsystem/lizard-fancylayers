@@ -2,7 +2,7 @@ Changelog of lizard-fancylayers
 ===================================================
 
 
-0.8 (unreleased)
+0.8 (2013-04-11)
 ----------------
 
 - Let the standard color and standard icon be configured using
