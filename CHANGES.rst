@@ -5,7 +5,15 @@ Changelog of lizard-fancylayers
 0.8 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Let the standard color and standard icon be configured using
+ lizard-map's Settings (FANCYLAYERS_DEFAULT_COLOR,
+ FANCYLAYERS_DEFAULT_SYMBOL_NAME and FANCYLAYERS_DEFAULT_SYMBOL_MASK)
+
+- Show first graph in normal color, next graph lines in green
+
+- Work with latest datasource timeseries API
+
+- Get graph legend correct, from timeseries' column names
 
 
 0.7 (2013-04-10)

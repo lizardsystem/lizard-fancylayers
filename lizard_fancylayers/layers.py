@@ -11,6 +11,8 @@ from django.template.loader import render_to_string
 
 from lizard_map import coordinates
 from lizard_map import workspace
+from lizard_map.models import Setting
+
 from lizard_map.adapter import Graph, FlotGraph
 from lizard_map.adapter import adapter_serialize
 from lizard_map.mapnik_helper import add_datasource_point
@@ -19,12 +21,30 @@ from lizard_map.symbol_manager import SymbolManager
 
 from lizard_datasource import properties
 from lizard_datasource import datasource
+from lizard_datasource import functools
 
 logger = logging.getLogger(__name__)
 
 DEFAULT_COLOR = '0000ff'
+DEFAULT_SYMBOL_NAME = 'meetpuntPeil.png'
+DEFAULT_SYMBOL_MASK = 'meetpuntPeil_mask.png'
 
 
+def default_color():
+    return Setting.get("FANCYLAYERS_DEFAULT_COLOR") or DEFAULT_COLOR
+
+
+def default_symbol_name():
+    return (Setting.get("FANCYLAYERS_DEFAULT_SYMBOL_NAME")
+            or DEFAULT_SYMBOL_NAME)
+
+
+def default_symbol_mask():
+    return (Setting.get("FANCYLAYERS_DEFAULT_SYMBOL_MASK")
+            or DEFAULT_SYMBOL_MASK)
+
+
+@functools.memoize
 def html_to_mapnik(color):
     if color[0] == '#':
         color = color[1:]
@@ -40,7 +60,7 @@ def symbol_filename(color):
         ICON_ORIGINALS,
         os.path.join(settings.MEDIA_ROOT, 'generated_icons'))
     filename = symbol_manager.get_symbol_transformed(
-        'meetpuntPeil.png', mask=('meetpuntPeil_mask.png',),
+        default_symbol_name(), mask=(default_symbol_mask(),),
         color=color)
     return filename
 
@@ -77,7 +97,7 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         styles = {}
 
         locations = list(self.datasource.locations())
-        colors = {"default": html_to_mapnik(DEFAULT_COLOR)}
+        colors = {"default": html_to_mapnik(default_color())}
 
         for location in locations:
             if location.color is not None:
@@ -325,23 +345,26 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
 
             if timeseries is not None:
                 is_empty = False
-                dataframe = timeseries.dataframe
                 # Plot data if available.
-                for series_num, series_name in enumerate(dataframe.columns):
-                    series = dataframe[series_name].dropna()
+                for series_num, series_name in enumerate(timeseries.columns):
+                    series = timeseries.get_series(series_name)
                     dates = series.keys()
                     values = list(series)
 
+                    # Hack -- show first line in normal color, every
+                    # next line in green.  Because for the first
+                    # practical use of this code, we have only one
+                    # other line, and it must be green.
                     if series_num == 0:
                         color = line_styles[str(identifier)]['color']
                     else:
-                        color = 'rgb(0, 255, 0)'
+                        color = 'rgb(126, 209, 37)'
                     if values:
                         graph.axes.plot(
                             dates, values,
                             lw=1,
                             color=color,
-                            label=location_name)
+                            label=series_name)
 
                 if (self.datasource.has_percentiles() and
                     hasattr(graph, 'add_percentiles')):
