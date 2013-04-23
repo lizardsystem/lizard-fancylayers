@@ -2,7 +2,7 @@ Changelog of lizard-fancylayers
 ===================================================
 
 
-0.9 (unreleased)
+0.9 (2013-04-23)
 ----------------
 
 - Fix bug with configured default icons -- Mapnik can't handle Unicode
