@@ -36,12 +36,12 @@ def default_color():
 
 def default_symbol_name():
     return (Setting.get("FANCYLAYERS_DEFAULT_SYMBOL_NAME")
-            or DEFAULT_SYMBOL_NAME)
+            or DEFAULT_SYMBOL_NAME).encode('utf8')
 
 
 def default_symbol_mask():
     return (Setting.get("FANCYLAYERS_DEFAULT_SYMBOL_MASK")
-            or DEFAULT_SYMBOL_MASK)
+            or DEFAULT_SYMBOL_MASK).encode('utf8')
 
 
 @functools.memoize
