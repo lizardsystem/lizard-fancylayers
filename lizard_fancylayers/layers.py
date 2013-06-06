@@ -29,6 +29,16 @@ DEFAULT_COLOR = '0000ff'
 DEFAULT_SYMBOL_NAME = 'meetpuntPeil.png'
 DEFAULT_SYMBOL_MASK = 'meetpuntPeil_mask.png'
 
+# Used for graph lines after the first
+COLORS = (
+    'rgb(126, 209, 37)',  # Greenish, and needed for a project
+    'rgb(255, 0, 0)',
+    'rgb(0, 0, 255)',
+    'rgb(0, 255, 255)',
+    'rgb(255, 0, 255)',
+    'rgb(255, 255, 0)'
+)
+
 
 def default_color():
     return Setting.get("FANCYLAYERS_DEFAULT_COLOR") or DEFAULT_COLOR
@@ -193,7 +203,7 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
                             extra_kwargs={'output_type': 'csv'})})
 
         render_kwargs = {
-            'unit': self.datasource.unit(self.choices_made) or u'',
+            'unit': u'',  # Don't show unit above the graphs
             'urls': urls,
             'symbol_url': self.symbol_url(),
             'collage_item_props': collage_item_props,
@@ -346,6 +356,7 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
             if timeseries is not None:
                 is_empty = False
                 # Plot data if available.
+
                 for series_num, series_name in enumerate(timeseries.columns):
                     series = timeseries.get_series(series_name)
                     dates = series.keys()
@@ -358,13 +369,23 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
                     if series_num == 0:
                         color = line_styles[str(identifier)]['color']
                     else:
-                        color = 'rgb(126, 209, 37)'
+                        color = COLORS[(series_num - 1) % len(COLORS)]
                     if values:
                         graph.axes.plot(
                             dates, values,
                             lw=1,
                             color=color,
-                            label=series_name)
+                            label=timeseries.label(series_name))
+
+                # For the y-label, we take all the units that are not None,
+                # each of them once only, and join them with ','
+                units = []
+                for column in timeseries.columns:
+                    unit = timeseries.unit(column)
+                    if unit is not None and unit not in units:
+                        units.append(unit)
+                if units:
+                    graph.axes.set_ylabel(', '.join(units))
 
                 if (self.datasource.has_percentiles() and
                     hasattr(graph, 'add_percentiles')):

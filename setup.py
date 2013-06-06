@@ -14,7 +14,7 @@ install_requires = [
     'django-nose',
     'lizard-ui >= 4.0',
     'lizard-map >= 4.0',
-    'lizard-datasource >= 0.7'
+    'lizard-datasource >= 0.12'
     ],
 
 tests_require = [

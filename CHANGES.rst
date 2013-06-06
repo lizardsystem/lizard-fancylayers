@@ -5,7 +5,7 @@ Changelog of lizard-fancylayers
 0.10 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Use new lizard-datasource method to show labels and y-axes.
 
 
 0.9 (2013-04-23)
