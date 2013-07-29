@@ -117,8 +117,8 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
 
         for colorname, color in colors.iteritems():
             rule = mapnik.Rule()
-            symbol = mapnik.PointSymbolizer(
-                symbol_pathname(color), 'png', 16, 16)
+            symbol = mapnik.PointSymbolizer()
+            symbol.filename = symbol_pathname(color)
             symbol.allow_overlap = True
             rule.symbols.append(symbol)
             rule.filter = mapnik.Filter("[Color] = '{0}'".format(colorname))
