@@ -130,12 +130,12 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         layer.datasource = mapnik.MemoryDatasource()
         layer.styles.append('trivialStyle')
 
-        for location in locations:
+        for _id, location in enumerate(locations):
             color = location.color or 'default'
             add_datasource_point(
                 layer.datasource, location.longitude,
                 location.latitude,
-                'Color', str(color))
+                'Color', str(color), _id)
 
         layers.append(layer)
         return layers, styles
