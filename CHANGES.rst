@@ -5,7 +5,7 @@ Changelog of lizard-fancylayers
 0.11 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Move to mapnik 2.2.0.
 
 
 0.10 (2013-06-06)
