@@ -127,7 +127,7 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         styles['trivialStyle'] = style
 
         layer = mapnik.Layer("Fancy Layers layer", coordinates.WGS84)
-        layer.datasource = mapnik.PointDatasource()
+        layer.datasource = mapnik.MemoryDatasource()
         layer.styles.append('trivialStyle')
 
         for location in locations:
