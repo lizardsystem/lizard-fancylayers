@@ -6,6 +6,7 @@ Changelog of lizard-fancylayers
 -----------------
 
 - Move to mapnik 2.2.0.
+- Remove nested 'ui' and 'map' urls when not running standalone.
 
 
 0.10 (2013-06-06)
