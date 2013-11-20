@@ -285,7 +285,8 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
 
     def _render_graph(
         self, identifiers, start_date, end_date, layout_extra=None,
-        raise_404_if_empty=False, GraphClass=Graph, **extra_params):
+        raise_404_if_empty=False, GraphClass=Graph, **extra_params
+    ):
         """
         Visualize timeseries in a graph.
 
@@ -331,8 +332,9 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         locations = list(self.datasource.locations())
         today = datetime.datetime.now()
 
-        graph = GraphClass(start_date, end_date, today=today,
-                      tz=pytz.timezone(settings.TIME_ZONE), **extra_params)
+        graph = GraphClass(
+            start_date, end_date, today=today,
+            tz=pytz.timezone(settings.TIME_ZONE), **extra_params)
         graph.axes.grid(True)
 #        parameter_name, unit = self.jdbc_source.get_name_and_unit(
 #            self.parameterkey)
@@ -357,6 +359,11 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
                 is_empty = False
                 # Plot data if available.
 
+                has_percentiles = False
+                if (self.datasource.has_percentiles() and
+                    hasattr(graph, 'add_percentiles')):
+                    has_percentiles = True
+
                 for series_num, series_name in enumerate(timeseries.columns):
                     series = timeseries.get_series(series_name)
                     dates = series.keys()
@@ -371,11 +378,17 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
                     else:
                         color = COLORS[(series_num - 1) % len(COLORS)]
                     if values:
+                        # Percentiles have only one timeserie which
+                        # needs the location label to add the percentiles.
+                        label = timeseries.label(series_name)
+                        if has_percentiles:
+                            label = location_name
+
                         graph.axes.plot(
                             dates, values,
                             lw=1,
                             color=color,
-                            label=timeseries.label(series_name))
+                            label=label)
 
                 # For the y-label, we take all the units that are not None,
                 # each of them once only, and join them with ','
@@ -387,8 +400,7 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
                 if units:
                     graph.axes.set_ylabel(', '.join(units))
 
-                if (self.datasource.has_percentiles() and
-                    hasattr(graph, 'add_percentiles')):
+                if has_percentiles:
                     percentiles = self.datasource.percentiles(
                         location_id, start_date, end_date)
                     opacities = ()
