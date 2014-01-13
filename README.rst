@@ -23,7 +23,7 @@ In case FEWS JDBC is used as a datasource (the only option as of the
 time of writing), there is also a script that runs every minute, to
 see if there are new latest values in it. It is run through supervisor.
 
-To the [supervisor] part in Buildout (usually in server.cfg), a line like
+To the [supervisor] part in Buildout (usually in server.cfg), a line like::
 
       40 cache_latest_values (autostart=false autorestart=false startsecs=0) ${buildout:bin-directory}/django [cache_latest_values]
 
@@ -34,7 +34,7 @@ running.
 
 Then, a cronjob that calls that should also be added, and it should
 run _every minute_ (almost all the time, the script will immediately
-conclude it has nothing to do and exit). E.g.,
+conclude it has nothing to do and exit). E.g.::
 
     [latest-values-cronjob]
     recipe = z3c.recipe.usercrontab
@@ -57,8 +57,8 @@ percentiles to it. Here is how to do that.
 
 1. Go to http://yoursitesurl.lizard.net/fancy/
 
-This searches for available datasources, and as a side effect saves a
-config object that can be edited in the admin for each of them.
+   This searches for available datasources, and as a side effect saves a
+   config object that can be edited in the admin for each of them.
 
 2. Create an augmented datasource. The augmented source is the thing
 we want to add things to; if you want to add to the FEWS JDBC source
