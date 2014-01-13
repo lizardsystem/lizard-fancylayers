@@ -61,19 +61,19 @@ percentiles to it. Here is how to do that.
    config object that can be edited in the admin for each of them.
 
 2. Create an augmented datasource. The augmented source is the thing
-we want to add things to; if you want to add to the FEWS JDBC source
-with slug "some_slug", choose "'some_slug' from app 'lizard_fewsjdbc'".
+   we want to add things to; if you want to add to the FEWS JDBC source
+   with slug "some_slug", choose "'some_slug' from app 'lizard_fewsjdbc'".
 
 3. Go to /admin/lizard_datasource/datasourcemodel/ . Make the
-augmented datasource visible, and all other datasources invisible. Run
-the cache_latest_values script on it (it's an action in the "Action"
-pulldown at the top).
+   augmented datasource visible, and all other datasources invisible. Run
+   the cache_latest_values script on it (it's an action in the "Action"
+   pulldown at the top).
 
 4. Go to /fancy/ again -- you should now see data coming from FEWS, a
-tree of filters to choose from.
+   tree of filters to choose from.
 
 5. Go to the datasource layers in the admin, and find all the layers
-you want to do something with. If some combination of
-slug/filter/parameter occurs more than once, pick the one belonging to
-your augmented datasource model. Give the layers you want to use for
-something a nickname.
+   you want to do something with. If some combination of
+   slug/filter/parameter occurs more than once, pick the one belonging to
+   your augmented datasource model. Give the layers you want to use for
+   something a nickname.
