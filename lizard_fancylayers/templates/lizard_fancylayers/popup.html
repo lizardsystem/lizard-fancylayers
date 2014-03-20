@@ -28,6 +28,12 @@
       {% for collage_item_prop in collage_item_props %}
         <li>
 
+          <a href="{{ collage_item_prop.url }}"
+             class="ss_table_save ss_sprite"
+             title="Export csv">&nbsp;</a>
+          {{ collage_item_prop.name }}
+          &nbsp;&nbsp;&nbsp;&nbsp;
+
           <a href="{% url lizard_map_collage_add %}"
              class="collage-add"
              data-name="{{ collage_item_prop.name }}"
@@ -40,10 +46,6 @@
             Toevoegen aan dashboard
           </a>
 
-          <a href="{{ collage_item_prop.url }}"
-             class="ss_table_save ss_sprite"
-             title="Export csv">&nbsp;</a>
-          {{ collage_item_prop.name }}
         </li>
       {% endfor %}
     </ul>
