@@ -38,6 +38,23 @@ COLORS = (
     'rgb(255, 0, 255)',
     'rgb(255, 255, 0)'
 )
+MAX_FLOT_POINTS = 100
+# ^^^ Translates to (max * 2) the way we calculate now.
+
+
+def limit_values(dates, values):
+    # HACK TO LIMIT THE AMOUNT OF DATA
+    original_length = len(values)
+    if original_length < MAX_FLOT_POINTS:
+        return dates, values
+    modulo = int(len(values) / MAX_FLOT_POINTS)
+    dates = [item for i, item in enumerate(dates)
+             if not i % modulo]
+    values = [item for i, item in enumerate(values)
+              if not i % modulo]
+    logger.debug("Limited %s values to %s",
+                 original_length, len(values))
+    return dates, values
 
 
 def default_color():
@@ -368,6 +385,9 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
                     series = timeseries.get_series(series_name)
                     dates = series.keys()
                     values = list(series)
+
+                    # Temp hack to limit the amount of values.
+                    dates, values = limit_values(dates, values)
 
                     # Hack -- show first line in normal color, every
                     # next line in green.  Because for the first
