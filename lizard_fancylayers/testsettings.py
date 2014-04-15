@@ -41,6 +41,7 @@ SITE_ID = 1
 SECRET_KEY = 'This is not secret but that is ok.'
 INSTALLED_APPS = [
     'lizard_fancylayers',
+    'lizard_fewsjdbc',
     'lizard_datasource',
     'lizard_ui',
     'lizard_map',
