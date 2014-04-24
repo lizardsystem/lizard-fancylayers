@@ -23,6 +23,8 @@ from lizard_datasource import properties
 from lizard_datasource import datasource
 from lizard_datasource import functools
 
+from lizard_fancylayers.douglas_peucker import simplify
+
 logger = logging.getLogger(__name__)
 
 DEFAULT_COLOR = '0000ff'
@@ -383,11 +385,13 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
 
                 for series_num, series_name in enumerate(timeseries.columns):
                     series = timeseries.get_series(series_name)
-                    dates = series.keys()
-                    values = list(series)
+                    # dates = series.keys()
+                    # values = list(series)  # series.values
 
                     # Temp hack to limit the amount of values.
-                    dates, values = limit_values(dates, values)
+                    # dates, values = limit_values(dates, values)
+
+                    dates, values = simplify(series)
 
                     # Hack -- show first line in normal color, every
                     # next line in green.  Because for the first
@@ -406,9 +410,16 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
 
                         graph.axes.plot(
                             dates, values,
-                            lw=1,
+                            lw=2,
                             color=color,
                             label=label)
+
+                        # TEMP DOUBLE
+                        # graph.axes.plot(
+                        #     list(series.keys()), list(series),
+                        #     lw=1,
+                        #     color=color,
+                        #     label=label)
 
                 # For the y-label, we take all the units that are not None,
                 # each of them once only, and join them with ','
