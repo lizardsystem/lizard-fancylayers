@@ -11,6 +11,9 @@ Changelog of lizard-fancylayers
 
 - Re-added 'add to collage/dashboard' link.
 
+- Marked the graph as zoomable: this enables lizard-fewsjdbc's douglas-peucker
+  behaviour.
+
 
 0.10 (2013-06-06)
 -----------------
