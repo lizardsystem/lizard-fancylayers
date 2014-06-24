@@ -14,6 +14,8 @@ Changelog of lizard-fancylayers
 - Marked the graph as zoomable: this enables lizard-fewsjdbc's douglas-peucker
   behaviour.
 
+- Add the function values_multiple_timeseries() to get all timeseries.
+
 
 0.10 (2013-06-06)
 -----------------
