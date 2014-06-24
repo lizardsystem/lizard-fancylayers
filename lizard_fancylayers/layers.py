@@ -249,11 +249,17 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
             'object': location
             }
 
+    def values_multiple_timeseries(self, identifier, start_date, end_date):
+        """Returns a lizard_datasource.timeseries.Timeseries object."""
+        return self.datasource.timeseries(
+            identifier['identifier'], start_date, end_date)
+
     def values(self, identifier, start_date, end_date):
         """Return values in list of dictionaries (datetime, value, unit)
         """
         timeseries = self.datasource.timeseries(
             identifier['identifier'], start_date, end_date)
+        
         values = [{
                 'datetime': data[0],
                 'value': data[1],
@@ -331,7 +337,6 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
 
         locations = list(self.datasource.locations())
         today = datetime.datetime.now()
-
         graph = GraphClass(
             start_date, end_date, today=today,
             tz=pytz.timezone(settings.TIME_ZONE), **extra_params)
