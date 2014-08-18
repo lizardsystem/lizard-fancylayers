@@ -6,12 +6,12 @@
 
 {% block sidebar %}
 <div id="iconbox" class="sidebarbox sidebarbox-stretched iconlist">
-<h2>Gemaakte keuzes</h2>
+<h2>{% trans 'Choices made' %}</h2>
 <ul>
 {% for criterion in view.forgettable_criteria %}
 <li>{{ criterion.description }}: {{ criterion.value }} (<a href="{{ criterion.url }}">verwijder</a>)</li>
 {% empty %}
-<li>Nog geen keuzes gemaakt.</li>
+<li>{% trans 'No choices' %}</li>
 {% endfor %}
 </ul>
 {% for criterion in view.visible_criteria %}

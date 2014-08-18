@@ -1,0 +1,8 @@
+[main]
+host = https://translations.lizard.net
+type = PO
+
+[lizard5.lizard-fancylayers-django]
+file_filter = lizard_fancylayers/locale/<lang>/LC_MESSAGES/django.po
+source_file = lizard_fancylayers/locale/en/LC_MESSAGES/django.po
+source_lang = en
