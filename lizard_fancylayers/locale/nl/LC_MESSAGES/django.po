@@ -4,13 +4,14 @@
 #
 # Translators:
 #   <>, 2014.
+# Alexander Hoff <>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Lizard 5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-18 03:26-0500\n"
-"PO-Revision-Date: 2014-08-18 08:29+0000\n"
-"Last-Translator: alexandr <>\n"
+"PO-Revision-Date: 2014-08-19 11:34+0000\n"
+"Last-Translator: Alexander Hoff <>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
