@@ -84,6 +84,8 @@ STATICFILES_FINDERS = STATICFILES_FINDERS
 
 FANCYLAYERS_STANDALONE = True
 
+SECRET_KEY = "Does not need to be secret"
+
 try:
     # Import local settings that aren't stored in svn/git.
     from lizard_fancylayers.local_testsettings import *
