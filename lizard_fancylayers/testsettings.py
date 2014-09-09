@@ -41,10 +41,13 @@ SITE_ID = 1
 SECRET_KEY = 'This is not secret but that is ok.'
 INSTALLED_APPS = [
     'lizard_fancylayers',
+    'lizard_fewsjdbc',
     'lizard_datasource',
     'lizard_ui',
     'lizard_map',
-    'staticfiles',
+    'lizard_maptree',
+    'lizard_wms',
+    'django.contrib.staticfiles',
     'compressor',
     'south',
     'django_nose',
@@ -80,6 +83,8 @@ MEDIA_ROOT = os.path.join(BUILDOUT_DIR, 'var', 'media')
 STATICFILES_FINDERS = STATICFILES_FINDERS
 
 FANCYLAYERS_STANDALONE = True
+
+SECRET_KEY = "Does not need to be secret"
 
 try:
     # Import local settings that aren't stored in svn/git.

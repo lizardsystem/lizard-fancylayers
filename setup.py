@@ -19,6 +19,7 @@ install_requires = [
     ],
 
 tests_require = [
+    'lizard_fewsjdbc',
     ]
 
 setup(name='lizard-fancylayers',

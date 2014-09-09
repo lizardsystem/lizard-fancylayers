@@ -1,10 +1,10 @@
 # (c) Nelen & Schuurmans.  GPL licensed, see LICENSE.rst.
 from __future__ import unicode_literals
 
+import json
 import logging
 
 from django.core.urlresolvers import reverse
-from django.utils import simplejson
 
 from lizard_map.lizard_widgets import WorkspaceAcceptable
 from lizard_map.views import AppView
@@ -23,7 +23,7 @@ class HomepageView(FancyLayersView):
 
     def make_url(self, choices_made):
         options = "".join("{0}-{1}/".format(
-                item[0], item[1]) for item in choices_made.items())
+            item[0], item[1]) for item in choices_made.items())
         return reverse("lizard_fancylayers.homepage", args=(options,))
 
     def dispatch(self, request, choices, *args):
@@ -67,8 +67,8 @@ class HomepageView(FancyLayersView):
                         option.workspace_acceptable = WorkspaceAcceptable(
                             name=option.description,
                             adapter_name='adapter_fancylayers',
-                            adapter_layer_json=simplejson.dumps({
-                                    'choices_made': new_choices_made.json()}))
+                            adapter_layer_json=json.dumps({
+                                'choices_made': new_choices_made.json()}))
                     else:
                         # Give it a URL that makes it choosable
                         option.url = self.make_url(new_choices_made)
