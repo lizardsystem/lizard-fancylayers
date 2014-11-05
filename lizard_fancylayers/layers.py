@@ -148,9 +148,15 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
             return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 
         locations = self.datasource.locations()
-
+        seen_identifiers = []
         result = []
         for location in locations:
+            identifier = location.identifier
+            if identifier in seen_identifiers:
+                # We constantly get three identical results.
+                continue
+            seen_identifiers.append(identifier)
+
             x, y = coordinates.wgs84_to_google(
                 location.longitude,
                 location.latitude)
@@ -162,7 +168,7 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
                      'name': location.description(),
                      'shortname': location.identifier,
                      'workspace_item': self.workspace_item,
-                     'identifier': {'identifier': location.identifier},
+                     'identifier': {'identifier': identifier},
                      'google_coords': (x, y),
                      'object': None})
         result.sort(key=lambda item: item['distance'])
@@ -259,7 +265,7 @@ class FancyLayersAdapter(workspace.WorkspaceItemAdapter):
         """
         timeseries = self.datasource.timeseries(
             identifier['identifier'], start_date, end_date)
-        
+
         values = [{
                 'datetime': data[0],
                 'value': data[1],
