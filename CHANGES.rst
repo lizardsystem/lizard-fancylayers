@@ -16,6 +16,10 @@ Changelog of lizard-fancylayers
 
 - Add the function values_multiple_timeseries() to get all timeseries.
 
+- Omitting double or triple results if they're the same.
+
+- Translation fixes.  
+  
 
 0.10 (2013-06-06)
 -----------------
